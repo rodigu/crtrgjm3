@@ -15,35 +15,17 @@ import java.io.IOException;
 public class EFS extends PApplet {
 
 
-Player player1;
-
 public void setup(){
   
-  player1 = new Player();
-  frame.setTitle ("Endless Falling Simulator");
+  surface.setTitle("Endless Falling Simulator");
+  surface.setResizable(true);
 }
 
 public void draw(){
-  background(230);
-  player1.update();
+  //if (mousePressed)
+    //surface.setSize(mouseX + 10, mouseY + 10);
 }
-class Player{
-  PImage[] fall_sprites;
-  int sprite_number = 7;
-  Player(){
-    fall_sprites = new PImage[sprite_number];
-    for (int i = 0; i < sprite_number; i++){
-      fall_sprites[i] = loadImage("fall_" + i + ".png");
-      fall_sprites[i].resize(100, 100);
-    }
-  }
-
-  public void update(){
-
-    image(fall_sprites[PApplet.parseInt(random(0, sprite_number))], width/2, height/2);
-  }
-}
-  public void settings() {  size(500, 500); }
+  public void settings() {  size(300, 700); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "EFS" };
     if (passedArgs != null) {
