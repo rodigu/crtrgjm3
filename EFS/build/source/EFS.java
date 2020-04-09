@@ -32,6 +32,8 @@ public void setup(){
 
 public void draw(){
   background(20);
+  fill(230);
+  rect(400, 0, 800, height);
   back.display();
   p1.update();
   p1.display();
@@ -156,6 +158,7 @@ class Sprites{
     //translate(-tx, -ty);
   }
 }
+
   public void settings() {  size(400, 600);  smooth(0); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "EFS" };

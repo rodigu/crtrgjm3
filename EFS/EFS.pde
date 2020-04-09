@@ -1,10 +1,12 @@
 Player p1;
 int ref = 10, pixel_size = 5;
 Back back;
+Manager manage;
 
 void setup(){
   size(400, 600);
   smooth(0);
+  manage = new Manager(1);
   back = new Back(0);
   //position (2), speed (2)
   p1 = new Player(width/2, 2*ref, ref/2);
@@ -15,10 +17,7 @@ void setup(){
 }
 
 void draw(){
-  background(20);
-  back.display();
-  p1.update();
-  p1.display();
+  manage.display();
 }
 
 void keyPressed(){
