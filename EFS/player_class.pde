@@ -1,45 +1,41 @@
 
 class Player{
+  Sprites p_sprt;
   float x, y;
-  float xspeed, yspeed, accel, top_speed;
-  float player_size;
+  float speed;
+  int count = 0, current = 0;
   int[] cntrl = {0, 0, 0, 0};
   /*
     0
   1   2
     3
   */
-  Player (float temp_x, float temp_y, float temp_xspeed, float temp_yspeed,
-          float temp_accel, float temp_top, float temp_size){
-    xspeed = temp_xspeed;
-    yspeed = temp_yspeed;
-    accel = temp_accel;
+  Player (float temp_x, float temp_y, float temp_speed){
+    speed = temp_speed;
     x = temp_x;
     y = temp_y;
-    player_size = temp_size;
+    p_sprt = new Sprites ("player", 7);
   }
 
   void display(){
     fill(230);
-    rect(x - player_size/2, y - player_size/2, player_size, 2*player_size);
+    if (count < 10)
+      count ++;
+    else{
+      count = 0;
+      current = int(random(0, 7));
+    }
+    p_sprt.display(current, x, y);
   }
 
   void update(){
-    if (cntrl[0] == 1 && yspeed >= -top_speed)
-      yspeed -= accel;
-    else if (yspeed < 0) yspeed ++;
-    if (cntrl[3] == 1 && yspeed <= top_speed)
-      yspeed += accel;
-    else if (yspeed > 0) yspeed --;
-
-    if (cntrl[1] == 1 && xspeed >= -top_speed)
-      xspeed -= accel;
-    else if (xspeed < 0) xspeed ++;
-    if (cntrl[2] == 1 && xspeed <= top_speed)
-      xspeed += accel;
-    else if (xspeed > 0) xspeed --;
-    
-    x += xspeed;
-    y += yspeed;
+    if (cntrl[0] == 1 && y - speed > 0)
+      y -= speed;
+    if (cntrl[1] == 1 && x - speed > 0)
+      x-= speed;
+    if (cntrl[2] == 1 && x + speed < width)
+      x += speed;
+    if (cntrl[3] == 1 && y + speed < height)
+      y += speed;
   }
 }
