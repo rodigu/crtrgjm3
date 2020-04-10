@@ -1,19 +1,23 @@
 Player p1;
-float ref = 10;
+int ref = 10, pixel_size = 5;
+Back back;
+Manager manage;
 
 void setup(){
   size(400, 600);
-  noSmooth();
-  //position (2), speed (2), acceleration (1), top speed (1), size (1)
-  p1 = new Player(width/2, 2*ref, 0, 0, ref, ref*2, ref);
+  smooth(0);
+  manage = new Manager(1);
+  back = new Back(0);
+  //position (2), speed (2)
+  p1 = new Player(width/2, 2*ref, ref/2);
   surface.setTitle("Endless Falling Simulator");
   surface.setResizable(true);
+  background(20);
+  frameRate(60);
 }
 
 void draw(){
-  background(20);
-  p1.update();
-  p1.display();
+  manage.display();
 }
 
 void keyPressed(){
