@@ -1,5 +1,5 @@
 Player p1;
-int ref = 10, pixel_size = 5;
+int ref = 100;
 Back back;
 Manager manage;
 
@@ -7,11 +7,11 @@ void setup(){
   size(400, 600);
   smooth(0);
   manage = new Manager(1);
-  back = new Back(0);
+  back = new Back();
   //position (2), speed (2)
-  p1 = new Player(width/2, 2*ref, ref/2);
+  p1 = new Player(width/2, ref, ref/10);
   surface.setTitle("Endless Falling Simulator");
-  surface.setResizable(true);
+  //surface.setResizable(true);
   background(20);
   frameRate(60);
 }
@@ -29,6 +29,8 @@ void keyPressed(){
     p1.cntrl[2] = 1;
   if (key == 's')
     p1.cntrl[3] = 1;
+  if (key == ' ')
+    p1.cntrl[4] = 1;
 }
 void keyReleased(){
   if (key == 'w')
@@ -39,4 +41,6 @@ void keyReleased(){
     p1.cntrl[2] = 0;
   if (key == 's')
     p1.cntrl[3] = 0;
+  if (key == ' ')
+    p1.cntrl[4] = 0;
 }

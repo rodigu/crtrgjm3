@@ -4,7 +4,7 @@ class Player{
   float x, y;
   float speed;
   int count = 0, current = 0;
-  int[] cntrl = {0, 0, 0, 0};
+  int[] cntrl = {0, 0, 0, 0, 0};
   /*
     0
   1   2
@@ -14,12 +14,12 @@ class Player{
     speed = temp_speed;
     x = temp_x;
     y = temp_y;
-    p_sprt = new Sprites ("player", 7);
+    p_sprt = new Sprites ("player", 7, ref);
   }
 
   void display(){
     fill(230);
-    if (count < 10)
+    if (count < 5)
       count ++;
     else{
       count = 0;
@@ -29,13 +29,13 @@ class Player{
   }
 
   void update(){
-    if (cntrl[0] == 1 && y - speed > 0)
+    if (cntrl[0] == 1 && y - speed > ref)
       y -= speed;
     if (cntrl[1] == 1 && x - speed > 0)
       x-= speed;
     if (cntrl[2] == 1 && x + speed < width)
       x += speed;
-    if (cntrl[3] == 1 && y + speed < height)
+    if (cntrl[3] == 1 && y + speed < height + ref)
       y += speed;
   }
 }
