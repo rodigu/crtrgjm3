@@ -39,32 +39,6 @@ public void setup(){
 public void draw(){
   manage.display();
 }
-/*
-void keyPressed(){
-  if (key == 'w')
-    p1.cntrl[0] = 1;
-  if (key == 'a')
-    p1.cntrl[1] = 1;
-  if (key == 'd')
-    p1.cntrl[2] = 1;
-  if (key == 's')
-    p1.cntrl[3] = 1;
-  if (key == ' ')
-    p1.cntrl[4] = 1;
-}
-void keyReleased(){
-  if (key == 'w')
-    p1.cntrl[0] = 0;
-  if (key == 'a')
-    p1.cntrl[1] = 0;
-  if (key == 'd')
-    p1.cntrl[2] = 0;
-  if (key == 's')
-    p1.cntrl[3] = 0;
-  if (key == ' ')
-    p1.cntrl[4] = 0;
-}
-*/
 class Back{
   int qtt = 10;
   Brick[] bricks;
@@ -161,8 +135,8 @@ class Manager{
       back.display();
       for(int i = 0; i < bqtt; i++){
         birds[i].update();
-        int col = collide(birds[i].x - ref/4, birds[i].y - ref/4, ref/2, ref/3,
-                          p1.x - ref/2, ref/3 + p1.y - ref/3, ref/2, ref/2);
+        int col = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
+                          p1.x - ref/2, p1.y + ref/3, ref, ref/2);
         if(((birds[i].speed < 0 && birds[i].x < -ref) ||
            (birds[i].speed > 0 && birds[i].x > width + ref)) ||
            (p1.swo.step != 0 &&
@@ -170,22 +144,28 @@ class Manager{
           if(col == 1) SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
           newBird(i);
         }
-        int col2 = collide(birds[i].x - ref/4, birds[i].y - ref/4, ref/2, ref/3,
+        int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if(col2 == 1 || shake_time != 0){
           if(shake_time == 0) shake_time = frameCount;
-          if(random(10) < 5)
-            screen_shake = -PApplet.parseInt(random(5, 15));
+          if(random(10) < 5) screen_shake = -PApplet.parseInt(random(5, 15));
           else screen_shake = PApplet.parseInt(random(5, 15));
           if((frameCount - shake_time)/frameRate >= 0.5f){
             shake_time = 0;
             screen_shake = 0;
           }
         }
+
+        //noFill();
+        //stroke(230, 30, 30);
+        //rect(birds[i].x - ref/5, birds[i].y - ref/6.7, ref/2.5, ref/5);
       }
       p1.update();
       p1.display();
-
+      //noFill();
+      //stroke(230, 30, 30);
+      //rect(p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
+      //rect(p1.x - ref/2, p1.y + ref/3, ref, ref/2);
     }
   }
   public void newBird(int i){
@@ -245,21 +225,6 @@ class Player{
       rec = 0;
     }
     else rec++;
-    /*
-    if (cntrl[0] == 1 && y - speed > 0)
-      y -= speed;
-    if (cntrl[1] == 1 && x - speed > 0)
-      x-= speed;
-    if (cntrl[2] == 1 && x + speed < width)
-      x += speed;
-    if (cntrl[3] == 1 && y + speed < height)
-      y += speed;
-    if (cntrl[4] == 1 && swo.step == 0 && rec >= 15){
-      swo.step += 1;
-      rec = 0;
-    }
-    else rec++;
-    */
   }
 }
 
