@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import ddf.minim.*; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -14,6 +16,10 @@ import java.io.IOException;
 
 public class EFS extends PApplet {
 
+
+Minim minim;
+AudioPlayer song;
+
 Player p1;
 int ref = 100;
 Back back;
@@ -24,6 +30,9 @@ PFont arcade;
 
 public void setup(){
   
+  minim = new Minim(this);
+  song = minim.loadFile("fsim_ost.wav", 2048);
+  song.loop();
   
   arcade = createFont("arcade.ttf", ref);
   manage = new Manager(1);
@@ -37,6 +46,7 @@ public void setup(){
 }
 
 public void draw(){
+song.loop();
   manage.display();
 }
 class Back{
@@ -75,25 +85,44 @@ class Brick{
 }
 class Bird{
   float x, y, speed;
-  Sprites sprts;
+  Sprites sprts, dsprts;
+  int dead, framecounter;
   Bird(float tx, float ty, float ts){
+    framecounter = 0;
+    dead = 0;
     x = tx;
     y = ty;
     speed = ts;
     sprts = new Sprites("bird", 3, ref/2);
+    char rad;
+    if(random(10) < 5) rad = 'd';
+    else rad = 'b';
+    dsprts = new Sprites(rad + "bird", 5, ref/2);
     if(speed < 0) sprts.scalex = -1;
   }
   public void update(){
-    x += speed;
-    fill(230);
-    if(frameCount%30 < 7.5f)
-      sprts.display(0, x, y);
-    else if(frameCount%30 < 15)
-      sprts.display(1, x, y);
-    else if(frameCount%30 < 22.5f)
-      sprts.display(2, x, y);
-    else
-      sprts.display(1, x, y);
+    if(dead == 0){
+      x += speed;
+      fill(230);
+      if(frameCount%30 < 7.5f)
+        sprts.display(0, x, y);
+      else if(frameCount%30 < 15)
+        sprts.display(1, x, y);
+      else if(frameCount%30 < 22.5f)
+        sprts.display(2, x, y);
+      else
+        sprts.display(1, x, y);
+    }
+    else{
+      if(framecounter == 0) framecounter = frameCount;
+      float tempcount = (frameCount - framecounter)/frameRate;
+      if(tempcount <= 0.05f) dsprts.display(0, x, y);
+      else if(tempcount <= 0.10f) dsprts.display(1, x, y);
+      else if(tempcount <= 0.15f) dsprts.display(2, x, y);
+      else if(tempcount <= 0.20f) dsprts.display(3, x, y);
+      else if(tempcount <= 0.25f) dsprts.display(4, x, y);
+      else dead = 2;
+    }
   }
 }
 
@@ -137,26 +166,27 @@ class Manager{
         birds[i].update();
         int col = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
                           p1.x - ref/2, p1.y + ref/3, ref, ref/2);
-        if(((birds[i].speed < 0 && birds[i].x < -ref) ||
-           (birds[i].speed > 0 && birds[i].x > width + ref)) ||
-           (p1.swo.step != 0 &&
-            col == 1)){
+        if((birds[i].speed < 0 && birds[i].x < -ref) ||
+           (birds[i].speed > 0 && birds[i].x > width + ref)){
           if(col == 1) SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
           newBird(i);
         }
+        if (p1.swo.step != 0 && col == 1)
+          birds[i].dead = 1;
         int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
-        if(col2 == 1 || shake_time != 0){
+        if((col2 == 1 || shake_time != 0) && birds[i].dead == 0){
           if(shake_time == 0) shake_time = frameCount;
 
           if(random(10) < 5) screen_shake = -PApplet.parseInt(random(5, 15));
           else screen_shake = PApplet.parseInt(random(5, 15));
-          
+
           if((frameCount - shake_time)/frameRate >= 0.5f){
             shake_time = 0;
             screen_shake = 0;
           }
         }
+        if(birds[i].dead == 2) newBird(i);
       }
       p1.update();
       p1.display();

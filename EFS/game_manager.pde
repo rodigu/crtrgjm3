@@ -28,26 +28,27 @@ class Manager{
         birds[i].update();
         int col = collide(birds[i].x - ref/5, birds[i].y - ref/6.7, ref/2.5, ref/5,
                           p1.x - ref/2, p1.y + ref/3, ref, ref/2);
-        if(((birds[i].speed < 0 && birds[i].x < -ref) ||
-           (birds[i].speed > 0 && birds[i].x > width + ref)) ||
-           (p1.swo.step != 0 &&
-            col == 1)){
+        if((birds[i].speed < 0 && birds[i].x < -ref) ||
+           (birds[i].speed > 0 && birds[i].x > width + ref)){
           if(col == 1) SCORE += int(abs(birds[i].speed)/5);
           newBird(i);
         }
+        if (p1.swo.step != 0 && col == 1)
+          birds[i].dead = 1;
         int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7, ref/2.5, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
-        if(col2 == 1 || shake_time != 0){
+        if((col2 == 1 || shake_time != 0) && birds[i].dead == 0){
           if(shake_time == 0) shake_time = frameCount;
 
           if(random(10) < 5) screen_shake = -int(random(5, 15));
           else screen_shake = int(random(5, 15));
-          
+
           if((frameCount - shake_time)/frameRate >= 0.5){
             shake_time = 0;
             screen_shake = 0;
           }
         }
+        if(birds[i].dead == 2) newBird(i);
       }
       p1.update();
       p1.display();

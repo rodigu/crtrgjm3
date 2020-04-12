@@ -1,3 +1,7 @@
+import ddf.minim.*;
+Minim minim;
+AudioPlayer song;
+
 Player p1;
 int ref = 100;
 Back back;
@@ -8,6 +12,9 @@ PFont arcade;
 
 void setup(){
   size(400, 600);
+  minim = new Minim(this);
+  song = minim.loadFile("fsim_ost.wav", 2048);
+  song.loop();
   smooth(0);
   arcade = createFont("arcade.ttf", ref);
   manage = new Manager(1);
