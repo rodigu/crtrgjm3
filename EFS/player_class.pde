@@ -35,9 +35,11 @@ class Player{
   }
 
   void update(){
+
     x = mouseX;
     y = mouseY;
     if(mousePressed && swo.step == 0 && rec >= 15){
+
       swo.step += 1;
       rec = 0;
     }

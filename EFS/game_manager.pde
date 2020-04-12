@@ -35,6 +35,7 @@ class Manager{
           if(col == 1) SCORE += int(abs(birds[i].speed)/5);
           newBird(i);
         }
+
         int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7, ref/2.5, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if(col2 == 1 || shake_time != 0){

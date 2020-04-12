@@ -39,6 +39,7 @@ public void setup(){
 public void draw(){
   manage.display();
 }
+  
 class Back{
   int qtt = 10;
   Brick[] bricks;
@@ -144,6 +145,7 @@ class Manager{
           if(col == 1) SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
           newBird(i);
         }
+
         int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if(col2 == 1 || shake_time != 0){
@@ -162,6 +164,7 @@ class Manager{
       }
       p1.update();
       p1.display();
+
       //noFill();
       //stroke(230, 30, 30);
       //rect(p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
@@ -218,6 +221,7 @@ class Player{
   }
 
   public void update(){
+
     x = mouseX;
     y = mouseY;
     if(mousePressed && swo.step == 0 && rec >= 15){
