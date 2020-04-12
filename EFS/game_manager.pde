@@ -26,8 +26,8 @@ class Manager{
       back.display();
       for(int i = 0; i < bqtt; i++){
         birds[i].update();
-        int col = collide(birds[i].x - ref/4, birds[i].y - ref/4, ref/2, ref/3,
-                          p1.x - ref/2, ref/3 + p1.y - ref/3, ref/2, ref/2);
+        int col = collide(birds[i].x - ref/5, birds[i].y - ref/6.7, ref/2.5, ref/5,
+                          p1.x - ref/2, p1.y + ref/3, ref, ref/2);
         if(((birds[i].speed < 0 && birds[i].x < -ref) ||
            (birds[i].speed > 0 && birds[i].x > width + ref)) ||
            (p1.swo.step != 0 &&
@@ -35,11 +35,14 @@ class Manager{
           if(col == 1) SCORE += int(abs(birds[i].speed)/5);
           newBird(i);
         }
-        int col2 = collide(birds[0].x - ref/5, birds[0].y - ref/6.7, ref/2.5, ref/5,
+        int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7, ref/2.5, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if(col2 == 1 || shake_time != 0){
           if(shake_time == 0) shake_time = frameCount;
-          screen_shake = int(random(2, 6));
+
+          if(random(10) < 5) screen_shake = -int(random(5, 15));
+          else screen_shake = int(random(5, 15));
+          
           if((frameCount - shake_time)/frameRate >= 0.5){
             shake_time = 0;
             screen_shake = 0;

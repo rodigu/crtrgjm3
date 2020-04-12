@@ -23,31 +23,3 @@ void setup(){
 void draw(){
   manage.display();
 }
-<<<<<<< Updated upstream
-
-void keyPressed(){
-  if (key == 'w')
-    p1.cntrl[0] = 1;
-  if (key == 'a')
-    p1.cntrl[1] = 1;
-  if (key == 'd')
-    p1.cntrl[2] = 1;
-  if (key == 's')
-    p1.cntrl[3] = 1;
-  if (key == ' ')
-    p1.cntrl[4] = 1;
-}
-void keyReleased(){
-  if (key == 'w')
-    p1.cntrl[0] = 0;
-  if (key == 'a')
-    p1.cntrl[1] = 0;
-  if (key == 'd')
-    p1.cntrl[2] = 0;
-  if (key == 's')
-    p1.cntrl[3] = 0;
-  if (key == ' ')
-    p1.cntrl[4] = 0;
-}
-=======
->>>>>>> Stashed changes
