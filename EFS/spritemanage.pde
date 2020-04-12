@@ -12,7 +12,7 @@ class Sprites{
   }
   void display(int n, float tx, float ty){
     pushMatrix();
-    translate(tx + scree_shake, ty + screen_shake);
+    translate(tx + screen_shake, ty + screen_shake);
     scale(scalex, scaley);
     image(sprt_img[n], -sis/2, -sis/2);
     popMatrix();

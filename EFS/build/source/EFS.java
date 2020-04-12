@@ -18,6 +18,7 @@ Player p1;
 int ref = 100;
 Back back;
 Manager manage;
+int screen_shake = 0, shake_time = 0;
 int SCORE = 0;
 PFont arcade;
 
@@ -165,8 +166,18 @@ class Manager{
            (birds[i].speed > 0 && birds[i].x > width + ref)) ||
            (p1.swo.step != 0 &&
             col == 1)){
-          if (col ==1) SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
+          if(col == 1) SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
           newBird(i);
+        }
+        int col2 = collide(birds[i].x - ref/4, birds[i].y - ref/4, ref/2, ref/3,
+                          p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
+        if(col2 == 1 || shake_time != 0){
+          if(shake_time == 0) shake_time = frameCount;
+          screen_shake = PApplet.parseInt(random(2, 6));
+          if((frameCount - shake_time)/frameRate >= 0.5f){
+            shake_time = 0;
+            screen_shake = 0;
+          }
         }
       }
       p1.update();
@@ -273,7 +284,7 @@ class Sprites{
   }
   public void display(int n, float tx, float ty){
     pushMatrix();
-    translate(tx, ty);
+    translate(tx + screen_shake, ty + screen_shake);
     scale(scalex, scaley);
     image(sprt_img[n], -sis/2, -sis/2);
     popMatrix();
