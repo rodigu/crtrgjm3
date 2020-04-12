@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import ddf.minim.*; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -14,6 +16,10 @@ import java.io.IOException;
 
 public class EFS extends PApplet {
 
+
+Minim minim;
+AudioPlayer song;
+
 Player p1;
 int ref = 100;
 Back back;
@@ -24,6 +30,9 @@ PFont arcade;
 
 public void setup(){
   
+  minim = new Minim(this);
+  song = minim.loadFile("fsim_ost.wav", 2048);
+  song.loop();
   
   arcade = createFont("arcade.ttf", ref);
   manage = new Manager(1);
@@ -37,6 +46,7 @@ public void setup(){
 }
 
 public void draw(){
+song.loop();
   manage.display();
 }
 class Back{
