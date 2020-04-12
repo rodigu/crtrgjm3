@@ -4,14 +4,14 @@ class Back{
   Back(){
     bricks = new Brick[qtt];
     for (int i = 0; i < qtt; i++)
-      bricks[i] = new Brick(random(0, width), height + ref*(random(0, 10*qtt)), random(1, 3));
+      bricks[i] = new Brick(random(0, width), height + ref*(random(0, qtt)), random(3, 6));
 
   }
   void display(){
       for (int i = 0; i < qtt; i++){
         bricks[i].update();
         if (bricks[i].y < 0 - bricks[i].sis){
-          bricks[i] = new Brick(random(0, width), height + ref*(random(0, 10*qtt)), random(1, 3));
+          bricks[i] = new Brick(random(0, width), height + ref*(random(0, qtt)), random(3, 6));
         }
       }
 
@@ -28,7 +28,7 @@ class Brick{
   void update(){
     fill(230);
     noStroke();
-    rect(x, y, sis, 6*sis);
+    rect(x, y, sis/3, 6*sis);
     y -= 20;
   }
 }

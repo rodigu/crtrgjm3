@@ -37,7 +37,7 @@ class Manager{
           birds[i].dead = 1;
         }
         int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7, ref/2.5, ref/5,
-                          p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
+                           p1.x - ref/8, p1.y - ref/4, ref/5, ref/2);
         if((col2 == 1 || shake_time != 0) && birds[i].dead == 0){
           if(shake_time == 0) shake_time = frameCount;
 
@@ -47,6 +47,7 @@ class Manager{
           if((frameCount - shake_time)/frameRate >= 0.5){
             shake_time = 0;
             screen_shake = 0;
+            if(p1.current_health > 0) p1.current_health--;
           }
         }
         if(birds[i].dead == 2) newBird(i);
@@ -55,8 +56,8 @@ class Manager{
       p1.display();
       noFill();
       stroke(230, 30, 30);
-      //rect(birds[0].x - ref/5, birds[0].y - ref/6.7, ref/2.5, ref/5);
-      //rect(p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
+      //rect(birds[1].x - ref/5, birds[1].y - ref/6.7, ref/2.5, ref/5);
+      //rect(p1.x - ref/8, p1.y - ref/4, ref/5, ref/2);
     }
   }
   void newBird(int i){

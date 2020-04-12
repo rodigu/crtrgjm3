@@ -54,14 +54,14 @@ class Back{
   Back(){
     bricks = new Brick[qtt];
     for (int i = 0; i < qtt; i++)
-      bricks[i] = new Brick(random(0, width), height + ref*(random(0, 10*qtt)), random(1, 3));
+      bricks[i] = new Brick(random(0, width), height + ref*(random(0, qtt)), random(3, 6));
 
   }
   public void display(){
       for (int i = 0; i < qtt; i++){
         bricks[i].update();
         if (bricks[i].y < 0 - bricks[i].sis){
-          bricks[i] = new Brick(random(0, width), height + ref*(random(0, 10*qtt)), random(1, 3));
+          bricks[i] = new Brick(random(0, width), height + ref*(random(0, qtt)), random(3, 6));
         }
       }
 
@@ -78,7 +78,7 @@ class Brick{
   public void update(){
     fill(230);
     noStroke();
-    rect(x, y, sis, 6*sis);
+    rect(x, y, sis/3, 6*sis);
     y -= 20;
   }
 }
@@ -174,7 +174,7 @@ class Manager{
           birds[i].dead = 1;
         }
         int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
-                          p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
+                           p1.x - ref/8, p1.y - ref/4, ref/5, ref/2);
         if((col2 == 1 || shake_time != 0) && birds[i].dead == 0){
           if(shake_time == 0) shake_time = frameCount;
 
@@ -184,6 +184,7 @@ class Manager{
           if((frameCount - shake_time)/frameRate >= 0.5f){
             shake_time = 0;
             screen_shake = 0;
+            if(p1.current_health > 0) p1.current_health--;
           }
         }
         if(birds[i].dead == 2) newBird(i);
@@ -192,8 +193,8 @@ class Manager{
       p1.display();
       noFill();
       stroke(230, 30, 30);
-      //rect(birds[0].x - ref/5, birds[0].y - ref/6.7, ref/2.5, ref/5);
-      //rect(p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
+      //rect(birds[1].x - ref/5, birds[1].y - ref/6.7, ref/2.5, ref/5);
+      //rect(p1.x - ref/8, p1.y - ref/4, ref/5, ref/2);
     }
   }
   public void newBird(int i){
@@ -212,7 +213,10 @@ class Manager{
 
 class Player{
   Sprites p_sprt;
+  Sprites health_sprt;
   float x, y;
+  int[] health = {1, 1, 1};
+  int current_health = 3;
   float speed;
   int count = 0, current = 0, rec = 0;
   int[] cntrl = {0, 0, 0, 0, 0};
@@ -226,8 +230,9 @@ class Player{
     swo = new Swoosh(0);
     speed = temp_speed;
     x = temp_x;
+    health_sprt = new Sprites("health", 2, ref/4);
     y = temp_y;
-    p_sprt = new Sprites ("player", 7, ref);
+    p_sprt = new Sprites ("player", 8, ref);
     p_sprt.scaley = -1;
   }
 
@@ -237,22 +242,31 @@ class Player{
       count ++;
     else{
       count = 0;
-      current = PApplet.parseInt(random(0, 7));
+      current = PApplet.parseInt(random(0, 8));
     }
     p_sprt.display(current, x, y);
     if(swo.step > 0){
       swo.step(x, y);
+    }
+    for(int i = 0; i < 3; i++){
+      if(health[i] == 1){
+        health_sprt.display(0, ref/5, (i + 1)*ref/3);
+      }
+      else health_sprt.display(1, ref/5, (i + 1)*ref/3);
     }
   }
 
   public void update(){
     x = mouseX;
     y = mouseY;
-    if(mousePressed && swo.step == 0 && rec >= 15){
+    if(mousePressed && swo.step == 0 && rec >= 10){
       swo.step += 1;
       rec = 0;
     }
     else rec++;
+    if(current_health == 2) health[2] = 0;
+    if(current_health == 1) health[1] = 0;
+    if(current_health == 0) health[0] = 0;
   }
 }
 
