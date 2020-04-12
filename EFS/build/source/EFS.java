@@ -18,18 +18,21 @@ Player p1;
 int ref = 100;
 Back back;
 Manager manage;
+int SCORE = 0;
+PFont arcade;
 
 public void setup(){
   
   
+  arcade = createFont("arcade.ttf", ref);
   manage = new Manager(1);
   back = new Back();
   //position (2), speed (2)
-  p1 = new Player(width/2, ref, ref/10);
+  p1 = new Player(width/2, ref, ref/5);
   surface.setTitle("Endless Falling Simulator");
   //surface.setResizable(true);
   background(20);
-  frameRate(60);
+  frameRate(30);
 }
 
 public void draw(){
@@ -61,7 +64,6 @@ public void keyReleased(){
     p1.cntrl[4] = 0;
 }
 class Back{
-  PImage back_img;
   int qtt = 10;
   Brick[] bricks;
   Back(){
@@ -97,24 +99,40 @@ class Brick{
 }
 class Bird{
   float x, y, speed;
+  Sprites sprts;
   Bird(float tx, float ty, float ts){
     x = tx;
     y = ty;
     speed = ts;
+    sprts = new Sprites("bird", 3, ref/2);
+    if(speed < 0) sprts.scalex = -1;
   }
   public void update(){
     x += speed;
     fill(230);
-    rect(x, y, ref/2, ref/2);
+    if(frameCount%30 < 7.5f)
+      sprts.display(0, x, y);
+    else if(frameCount%30 < 15)
+      sprts.display(1, x, y);
+    else if(frameCount%30 < 22.5f)
+      sprts.display(2, x, y);
+    else
+      sprts.display(1, x, y);
   }
 }
 
 public int collide(float x1, float y1, float sx1, float sy1,
             float x2, float y2, float sx2, float sy2){
+  if ((x1 >= x2 && y1 >= y2 && x1 <= x2 + sx2 && y1 <= y2 +sy2) ||
+      (x1 + sx1 >= x2 && y1 >= y2 && x1 + sx1 <= x2 + sx2 && y1 <= y2 + sy2) ||
+      (x1 + sx1 >= x2 && y1 + sy1 >= y2 && x1 + sx1 <= x2 + sx2 && y1 + sy1 <= y2 +sy2) ||
+      (x1 >= x2 && y1 + sy1 >= y2 && x1 <= x2 + sx2 && y1 + sy1 <= y2 +sy2))
+    return 1;
+  
   return 0;
 }
 class Manager{
-  int state, bqtt = 10;
+  int state, bqtt = 5;
   Bird[] birds;
   Manager(int te){
     state = te;
@@ -135,29 +153,38 @@ class Manager{
   public void display(){
     if(state == 1){
       background(20);
+      textFont(arcade);
+      textSize(ref/2);
+      text(SCORE, (width/2) - ref/4, ref);
       back.display();
       for(int i = 0; i < bqtt; i++){
         birds[i].update();
-        if((birds[i].speed < 0 && birds[i].x < -ref) ||
-           (birds[i].speed > 0 && birds[i].x > width + ref)){
-          float sx, sp;
-          if (random(0, 10) < 5) {
-            sx = -ref;
-            sp = random(3, 10);
-          }
-          else {
-            sx = width + ref;
-            sp = random(-3, -10);
-          }
-          birds[i] = new Bird(sx, random(0, height), sp);
-
+        int col = collide(birds[i].x - ref/4, birds[i].y - ref/4, ref/2, ref/3,
+                          p1.x - ref/2, ref/3 + p1.y - ref/3, ref/2, ref/2);
+        if(((birds[i].speed < 0 && birds[i].x < -ref) ||
+           (birds[i].speed > 0 && birds[i].x > width + ref)) ||
+           (p1.swo.step != 0 &&
+            col == 1)){
+          if (col ==1) SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
+          newBird(i);
         }
       }
-
       p1.update();
       p1.display();
-    }
 
+    }
+  }
+  public void newBird(int i){
+    float sx, sp;
+    if (random(0, 10) < 5) {
+      sx = -ref;
+      sp = random(6, 15);
+    }
+    else {
+      sx = width + ref;
+      sp = random(-15, -6);
+    }
+    birds[i] = new Bird(sx, random(0, height), sp);
   }
 }
 
@@ -165,18 +192,21 @@ class Player{
   Sprites p_sprt;
   float x, y;
   float speed;
-  int count = 0, current = 0;
+  int count = 0, current = 0, rec = 0;
   int[] cntrl = {0, 0, 0, 0, 0};
+  Swoosh swo;
   /*
     0
   1   2
     3
   */
   Player (float temp_x, float temp_y, float temp_speed){
+    swo = new Swoosh(0);
     speed = temp_speed;
     x = temp_x;
     y = temp_y;
     p_sprt = new Sprites ("player", 7, ref);
+    p_sprt.scaley = -1;
   }
 
   public void display(){
@@ -188,23 +218,50 @@ class Player{
       current = PApplet.parseInt(random(0, 7));
     }
     p_sprt.display(current, x, y);
+    if(swo.step > 0){
+      swo.step(x, y);
+    }
   }
 
   public void update(){
-    if (cntrl[0] == 1 && y - speed > ref)
+    if (cntrl[0] == 1 && y - speed > 0)
       y -= speed;
     if (cntrl[1] == 1 && x - speed > 0)
       x-= speed;
     if (cntrl[2] == 1 && x + speed < width)
       x += speed;
-    if (cntrl[3] == 1 && y + speed < height + ref)
+    if (cntrl[3] == 1 && y + speed < height)
       y += speed;
+    if (cntrl[4] == 1 && swo.step == 0 && rec >= 15){
+      swo.step += 1;
+      rec = 0;
+    }
+    else rec++;
   }
+}
+
+class Swoosh{
+  //swoosh has 4 steps: 0 is deactivated, 1 through 3 represent the sprite states
+  int step;
+  Sprites sprt;
+  Swoosh(int s){
+    step = s;
+    sprt = new Sprites("swoosh", 3, ref);
+    sprt.scaley = -1;
+  }
+  public void step(float tx, float ty){
+    if(step >= 4){
+      step = 0;
+      return;
+    }
+    sprt.display(step - 1, tx, ty + ref/3);
+    step++;
+  }
+
 }
 class Sprites{
   PImage[] sprt_img;
-  int qtt;
-  int sis;
+  int qtt, sis, scalex = 1, scaley = 1;
   Sprites(String file_name, int temp_qtt, int ts){
     qtt = temp_qtt;
     sprt_img = new PImage[qtt];
@@ -215,10 +272,11 @@ class Sprites{
     }
   }
   public void display(int n, float tx, float ty){
+    pushMatrix();
     translate(tx, ty);
-    rotate(PI);
-    image(sprt_img[n], -sis/2, sis/2);
-    //translate(-tx, -ty);
+    scale(scalex, scaley);
+    image(sprt_img[n], -sis/2, -sis/2);
+    popMatrix();
   }
 }
   public void settings() {  size(400, 600);  smooth(0); }

@@ -1,5 +1,4 @@
 class Back{
-  PImage back_img;
   int qtt = 10;
   Brick[] bricks;
   Back(){
