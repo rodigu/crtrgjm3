@@ -9,7 +9,10 @@ class Bird{
     y = ty;
     speed = ts;
     sprts = new Sprites("bird", 3, ref/2);
-    dsprts = new Sprites("dbird", 5, ref/2);
+    char rad;
+    if(random(10) < 5) rad = 'd';
+    else rad = 'b';
+    dsprts = new Sprites(rad + "bird", 5, ref/2);
     if(speed < 0) sprts.scalex = -1;
   }
   void update(){
