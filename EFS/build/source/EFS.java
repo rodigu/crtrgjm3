@@ -46,7 +46,6 @@ public void setup(){
 }
 
 public void draw(){
-song.loop();
   manage.display();
 }
 class Back{
@@ -168,11 +167,12 @@ class Manager{
                           p1.x - ref/2, p1.y + ref/3, ref, ref/2);
         if((birds[i].speed < 0 && birds[i].x < -ref) ||
            (birds[i].speed > 0 && birds[i].x > width + ref)){
-          if(col == 1) SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
           newBird(i);
         }
-        if (p1.swo.step != 0 && col == 1)
+        if (p1.swo.step != 0 && col == 1){
+          SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
           birds[i].dead = 1;
+        }
         int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if((col2 == 1 || shake_time != 0) && birds[i].dead == 0){
