@@ -23,6 +23,7 @@ void setup(){
 void draw(){
   manage.display();
 }
+<<<<<<< Updated upstream
 
 void keyPressed(){
   if (key == 'w')
@@ -48,3 +49,5 @@ void keyReleased(){
   if (key == ' ')
     p1.cntrl[4] = 0;
 }
+=======
+>>>>>>> Stashed changes

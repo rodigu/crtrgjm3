@@ -39,6 +39,7 @@ public void setup(){
 public void draw(){
   manage.display();
 }
+<<<<<<< Updated upstream
 
 public void keyPressed(){
   if (key == 'w')
@@ -64,6 +65,8 @@ public void keyReleased(){
   if (key == ' ')
     p1.cntrl[4] = 0;
 }
+=======
+>>>>>>> Stashed changes
 class Back{
   int qtt = 10;
   Brick[] bricks;
@@ -169,7 +172,7 @@ class Manager{
           if(col == 1) SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
           newBird(i);
         }
-        int col2 = collide(birds[i].x - ref/4, birds[i].y - ref/4, ref/2, ref/3,
+        int col2 = collide(birds[0].x - ref/5, birds[0].y - ref/6.7f, ref/2.5f, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if(col2 == 1 || shake_time != 0){
           if(shake_time == 0) shake_time = frameCount;
@@ -182,7 +185,10 @@ class Manager{
       }
       p1.update();
       p1.display();
-
+      noFill();
+      stroke(230, 30, 30);
+      //rect(birds[0].x - ref/5, birds[0].y - ref/6.7, ref/2.5, ref/5);
+      //rect(p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
     }
   }
   public void newBird(int i){
@@ -235,6 +241,7 @@ class Player{
   }
 
   public void update(){
+<<<<<<< Updated upstream
     if (cntrl[0] == 1 && y - speed > 0)
       y -= speed;
     if (cntrl[1] == 1 && x - speed > 0)
@@ -244,6 +251,11 @@ class Player{
     if (cntrl[3] == 1 && y + speed < height)
       y += speed;
     if (cntrl[4] == 1 && swo.step == 0 && rec >= 15){
+=======
+    x = mouseX;
+    y = mouseY;
+    if(mousePressed && swo.step == 0 && rec >= 15){
+>>>>>>> Stashed changes
       swo.step += 1;
       rec = 0;
     }

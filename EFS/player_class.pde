@@ -35,6 +35,7 @@ class Player{
   }
 
   void update(){
+<<<<<<< Updated upstream
     if (cntrl[0] == 1 && y - speed > 0)
       y -= speed;
     if (cntrl[1] == 1 && x - speed > 0)
@@ -44,6 +45,11 @@ class Player{
     if (cntrl[3] == 1 && y + speed < height)
       y += speed;
     if (cntrl[4] == 1 && swo.step == 0 && rec >= 15){
+=======
+    x = mouseX;
+    y = mouseY;
+    if(mousePressed && swo.step == 0 && rec >= 15){
+>>>>>>> Stashed changes
       swo.step += 1;
       rec = 0;
     }

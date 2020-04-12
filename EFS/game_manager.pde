@@ -35,7 +35,7 @@ class Manager{
           if(col == 1) SCORE += int(abs(birds[i].speed)/5);
           newBird(i);
         }
-        int col2 = collide(birds[i].x - ref/4, birds[i].y - ref/4, ref/2, ref/3,
+        int col2 = collide(birds[0].x - ref/5, birds[0].y - ref/6.7, ref/2.5, ref/5,
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if(col2 == 1 || shake_time != 0){
           if(shake_time == 0) shake_time = frameCount;
@@ -48,7 +48,10 @@ class Manager{
       }
       p1.update();
       p1.display();
-
+      noFill();
+      stroke(230, 30, 30);
+      //rect(birds[0].x - ref/5, birds[0].y - ref/6.7, ref/2.5, ref/5);
+      //rect(p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
     }
   }
   void newBird(int i){
