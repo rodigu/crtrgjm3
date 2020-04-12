@@ -39,7 +39,9 @@ class Manager{
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if(col2 == 1 || shake_time != 0){
           if(shake_time == 0) shake_time = frameCount;
-          screen_shake = int(random(2, 6));
+          if(random(10) < 5)
+            screen_shake = -int(random(5, 15));
+          else screen_shake = int(random(5, 15));
           if((frameCount - shake_time)/frameRate >= 0.5){
             shake_time = 0;
             screen_shake = 0;

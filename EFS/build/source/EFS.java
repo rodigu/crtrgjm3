@@ -39,8 +39,8 @@ public void setup(){
 public void draw(){
   manage.display();
 }
-
-public void keyPressed(){
+/*
+void keyPressed(){
   if (key == 'w')
     p1.cntrl[0] = 1;
   if (key == 'a')
@@ -52,7 +52,7 @@ public void keyPressed(){
   if (key == ' ')
     p1.cntrl[4] = 1;
 }
-public void keyReleased(){
+void keyReleased(){
   if (key == 'w')
     p1.cntrl[0] = 0;
   if (key == 'a')
@@ -64,6 +64,7 @@ public void keyReleased(){
   if (key == ' ')
     p1.cntrl[4] = 0;
 }
+*/
 class Back{
   int qtt = 10;
   Brick[] bricks;
@@ -173,7 +174,9 @@ class Manager{
                           p1.x - ref/8, p1.y - ref/4, ref/4, ref/2);
         if(col2 == 1 || shake_time != 0){
           if(shake_time == 0) shake_time = frameCount;
-          screen_shake = PApplet.parseInt(random(2, 6));
+          if(random(10) < 5)
+            screen_shake = -PApplet.parseInt(random(5, 15));
+          else screen_shake = PApplet.parseInt(random(5, 15));
           if((frameCount - shake_time)/frameRate >= 0.5f){
             shake_time = 0;
             screen_shake = 0;
@@ -235,6 +238,14 @@ class Player{
   }
 
   public void update(){
+    x = mouseX;
+    y = mouseY;
+    if(mousePressed && swo.step == 0 && rec >= 15){
+      swo.step += 1;
+      rec = 0;
+    }
+    else rec++;
+    /*
     if (cntrl[0] == 1 && y - speed > 0)
       y -= speed;
     if (cntrl[1] == 1 && x - speed > 0)
@@ -248,6 +259,7 @@ class Player{
       rec = 0;
     }
     else rec++;
+    */
   }
 }
 

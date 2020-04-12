@@ -35,6 +35,14 @@ class Player{
   }
 
   void update(){
+    x = mouseX;
+    y = mouseY;
+    if(mousePressed && swo.step == 0 && rec >= 15){
+      swo.step += 1;
+      rec = 0;
+    }
+    else rec++;
+    /*
     if (cntrl[0] == 1 && y - speed > 0)
       y -= speed;
     if (cntrl[1] == 1 && x - speed > 0)
@@ -48,6 +56,7 @@ class Player{
       rec = 0;
     }
     else rec++;
+    */
   }
 }
 

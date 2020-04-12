@@ -23,7 +23,7 @@ void setup(){
 void draw(){
   manage.display();
 }
-
+/*
 void keyPressed(){
   if (key == 'w')
     p1.cntrl[0] = 1;
@@ -48,3 +48,4 @@ void keyReleased(){
   if (key == ' ')
     p1.cntrl[4] = 0;
 }
+*/
