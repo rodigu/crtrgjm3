@@ -54,7 +54,10 @@ class Player{
     else rec++;
     if(current_health == 2) health[2] = 0;
     if(current_health == 1) health[1] = 0;
-    if(current_health == 0) health[0] = 0;
+    if(current_health == 0){
+      state = 2;
+      health[0] = 0;
+    }
   }
 }
 
