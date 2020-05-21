@@ -19,13 +19,13 @@ public class EFS extends PApplet {
 
 Minim minim;
 AudioPlayer song;
-
+Sprites bird_sprts, bird_dsprts;
 Player p1;
 int ref = 100;
 Back back;
 Manager manage;
 int screen_shake = 0, shake_time = 0;
-int SCORE = 0;
+int SCORE = 0, state = 1;
 PFont arcade;
 
 public void setup(){
@@ -33,9 +33,15 @@ public void setup(){
   minim = new Minim(this);
   song = minim.loadFile("fsim_ost.wav", 2048);
   song.loop();
+  song.setVolume(10);
   
+  bird_sprts = new Sprites("bird", 3, ref/2);
+  char rad;
+  if(random(10) < 5) rad = 'd';
+  else rad = 'b';
+  bird_dsprts = new Sprites(rad + "bird", 5, ref/2);
   arcade = createFont("arcade.ttf", ref);
-  manage = new Manager(1);
+  manage = new Manager();
   back = new Back();
   //position (2), speed (2)
   p1 = new Player(width/2, ref, ref/5);
@@ -46,7 +52,9 @@ public void setup(){
 }
 
 public void draw(){
-  manage.display();
+  if (state == 1)
+    manage.display();
+  else if (state == 2) DeathMenu();
 }
 class Back{
   int qtt = 10;
@@ -84,7 +92,6 @@ class Brick{
 }
 class Bird{
   float x, y, speed;
-  Sprites sprts, dsprts;
   int dead, framecounter;
   Bird(float tx, float ty, float ts){
     framecounter = 0;
@@ -92,34 +99,30 @@ class Bird{
     x = tx;
     y = ty;
     speed = ts;
-    sprts = new Sprites("bird", 3, ref/2);
-    char rad;
-    if(random(10) < 5) rad = 'd';
-    else rad = 'b';
-    dsprts = new Sprites(rad + "bird", 5, ref/2);
-    if(speed < 0) sprts.scalex = -1;
   }
   public void update(){
     if(dead == 0){
       x += speed;
       fill(230);
+      if(speed < 0) bird_sprts.scalex = -1;
+      else bird_sprts.scalex = 1;
       if(frameCount%30 < 7.5f)
-        sprts.display(0, x, y);
+        bird_sprts.display(0, x, y);
       else if(frameCount%30 < 15)
-        sprts.display(1, x, y);
+        bird_sprts.display(1, x, y);
       else if(frameCount%30 < 22.5f)
-        sprts.display(2, x, y);
+        bird_sprts.display(2, x, y);
       else
-        sprts.display(1, x, y);
+        bird_sprts.display(1, x, y);
     }
     else{
       if(framecounter == 0) framecounter = frameCount;
       float tempcount = (frameCount - framecounter)/frameRate;
-      if(tempcount <= 0.05f) dsprts.display(0, x, y);
-      else if(tempcount <= 0.10f) dsprts.display(1, x, y);
-      else if(tempcount <= 0.15f) dsprts.display(2, x, y);
-      else if(tempcount <= 0.20f) dsprts.display(3, x, y);
-      else if(tempcount <= 0.25f) dsprts.display(4, x, y);
+      if(tempcount <= 0.05f) bird_dsprts.display(0, x, y);
+      else if(tempcount <= 0.10f) bird_dsprts.display(1, x, y);
+      else if(tempcount <= 0.15f) bird_dsprts.display(2, x, y);
+      else if(tempcount <= 0.20f) bird_dsprts.display(3, x, y);
+      else if(tempcount <= 0.25f) bird_dsprts.display(4, x, y);
       else dead = 2;
     }
   }
@@ -136,10 +139,9 @@ public int collide(float x1, float y1, float sx1, float sy1,
   return 0;
 }
 class Manager{
-  int state, bqtt = 5;
+  int bqtt = 5;
   Bird[] birds;
-  Manager(int te){
-    state = te;
+  Manager(){
     birds = new Bird[bqtt];
     for (int i = 0; i < bqtt; i++){
       float sx = 0, sp;
@@ -155,47 +157,47 @@ class Manager{
     }
   }
   public void display(){
-    if(state == 1){
-      background(20);
-      textFont(arcade);
-      textSize(ref/2);
-      text(SCORE, (width/2) - ref/4, ref);
-      back.display();
-      for(int i = 0; i < bqtt; i++){
-        birds[i].update();
-        int col = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
-                          p1.x - ref/2, p1.y + ref/3, ref, ref/2);
-        if((birds[i].speed < 0 && birds[i].x < -ref) ||
-           (birds[i].speed > 0 && birds[i].x > width + ref)){
-          newBird(i);
-        }
-        if (p1.swo.step != 0 && col == 1){
-          SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
-          birds[i].dead = 1;
-        }
-        int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
-                           p1.x - ref/8, p1.y - ref/4, ref/5, ref/2);
-        if((col2 == 1 || shake_time != 0) && birds[i].dead == 0){
-          if(shake_time == 0) shake_time = frameCount;
-
-          if(random(10) < 5) screen_shake = -PApplet.parseInt(random(5, 15));
-          else screen_shake = PApplet.parseInt(random(5, 15));
-
-          if((frameCount - shake_time)/frameRate >= 0.5f){
-            shake_time = 0;
-            screen_shake = 0;
-            if(p1.current_health > 0) p1.current_health--;
-          }
-        }
-        if(birds[i].dead == 2) newBird(i);
+    background(20);
+    textFont(arcade);
+    textSize(ref/2);
+    textAlign(CENTER);
+    text(SCORE, (width/2), ref);
+    back.display();
+    for(int i = 0; i < bqtt; i++){
+      birds[i].update();
+      int col = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
+                        p1.x - ref/2, p1.y + ref/3, ref, ref/2);
+      if((birds[i].speed < 0 && birds[i].x < -ref) ||
+         (birds[i].speed > 0 && birds[i].x > width + ref)){
+        newBird(i);
       }
-      p1.update();
-      p1.display();
-      noFill();
-      stroke(230, 30, 30);
-      //rect(birds[1].x - ref/5, birds[1].y - ref/6.7, ref/2.5, ref/5);
-      //rect(p1.x - ref/8, p1.y - ref/4, ref/5, ref/2);
+      if (p1.swo.step != 0 && col == 1){
+        SCORE += PApplet.parseInt(abs(birds[i].speed)/5);
+        birds[i].dead = 1;
+      }
+      int col2 = collide(birds[i].x - ref/5, birds[i].y - ref/6.7f, ref/2.5f, ref/5,
+                         p1.x - ref/8, p1.y - ref/4, ref/5, ref/2);
+      if((col2 == 1 || shake_time != 0) && birds[i].dead == 0){
+        if(shake_time == 0) shake_time = frameCount;
+
+        if(random(10) < 5) screen_shake = -PApplet.parseInt(random(5, 15));
+        else screen_shake = PApplet.parseInt(random(5, 15));
+
+        if((frameCount - shake_time)/frameRate >= 0.5f){
+          shake_time = 0;
+          screen_shake = 0;
+          if(p1.current_health > 0) p1.current_health--;
+        }
+      }
+      if(birds[i].dead == 2) newBird(i);
     }
+    p1.update();
+    p1.display();
+    noFill();
+    stroke(230, 30, 30);
+    //rect(birds[1].x - ref/5, birds[1].y - ref/6.7, ref/2.5, ref/5);
+    //rect(p1.x - ref/8, p1.y - ref/4, ref/5, ref/2);
+
   }
   public void newBird(int i){
     float sx, sp;
@@ -209,6 +211,18 @@ class Manager{
     }
     birds[i] = new Bird(sx, random(0, height), sp);
   }
+}
+
+public void DeathMenu(){
+  tint(255, 0);
+  textSize(ref/2);
+  textAlign(CENTER);
+  text("play again", (width/2), (height/2));
+  if(mousePressed && mouseX >= ref && mouseX <= width - ref &&
+     mouseY >= (ref/4) - (height/2) && mouseY <= (ref/4) + (height/2)){
+     manage = new Manager();
+     state = 1;
+   }
 }
 
 class Player{
@@ -266,7 +280,10 @@ class Player{
     else rec++;
     if(current_health == 2) health[2] = 0;
     if(current_health == 1) health[1] = 0;
-    if(current_health == 0) health[0] = 0;
+    if(current_health == 0){
+      state = 2;
+      health[0] = 0;
+    }
   }
 }
 
