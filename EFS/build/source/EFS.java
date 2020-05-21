@@ -33,7 +33,6 @@ public void setup(){
   minim = new Minim(this);
   song = minim.loadFile("fsim_ost.wav", 2048);
   song.loop();
-  song.setVolume(10);
   
   bird_sprts = new Sprites("bird", 3, ref/2);
   char rad;
